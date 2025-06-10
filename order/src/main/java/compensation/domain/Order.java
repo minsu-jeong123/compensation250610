@@ -47,18 +47,12 @@ private String address;
 
     @PostPersist
     public void onPostPersist(){
-    Inventory inventory = OrderApplication.applicationContext
-        .getBean(compensation.external.InventoryService.class)
-        .checkStock(get??);
-
 
         OrderPlaced orderPlaced = new OrderPlaced(this);
         orderPlaced.publishAfterCommit();
 
-
-
-        OrderCancelled orderCancelled = new OrderCancelled(this);
-        orderCancelled.publishAfterCommit();
+        // OrderCancelled orderCancelled = new OrderCancelled(this);
+        // orderCancelled.publishAfterCommit();
 
     
     }
@@ -68,7 +62,15 @@ private String address;
         return orderRepository;
     }
 
+    public static void updateStatus(OutOfStock outOfStock) {
+        repository().findById(outOfStock.getOrderId()).ifPresent(order ->{
+            
+            order.setStatus("OrderCancelled");
+            repository().save(order);
+            
+        });
 
+    }
 
 
 
